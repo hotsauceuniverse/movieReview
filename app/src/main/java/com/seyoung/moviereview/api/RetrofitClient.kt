@@ -1,7 +1,9 @@
 package com.seyoung.moviereview.api
 
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private const val KOBIS_BASE_URL =
@@ -11,6 +13,13 @@ object RetrofitClient {
     // 실제 요청 값 : https://api.themoviedb.org/3/search/movie
     private const val TMDB_BASE_URL =
         "https://api.themoviedb.org/3/"
+
+    // java.net.sockettimeoutexception timeout 나서 서버 통신 connectTimeout을 늘리기
+    val client = OkHttpClient.Builder()
+        .connectTimeout(100, TimeUnit.SECONDS)
+        .readTimeout(100, TimeUnit.SECONDS)
+        .writeTimeout(100, TimeUnit.SECONDS)
+        .build()
 
     val api: KOBISApi by lazy {
         Retrofit.Builder()
@@ -23,6 +32,7 @@ object RetrofitClient {
     fun getTmdb(): TmdbApi {
         return Retrofit.Builder()
             .baseUrl(TMDB_BASE_URL)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TmdbApi::class.java)
