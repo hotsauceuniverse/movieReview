@@ -6,21 +6,20 @@
     android:orientation="vertical"
     android:layout_marginHorizontal="8dp"
     android:background="@color/white"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
+    android:padding="10dp"
     >
 
     <ImageView
-        android:id="@+id/imgPoster"
-        android:layout_width="130dp"
-        android:layout_height="180dp"
+        android:id="@+id/Ct_imgPoster"
+        android:layout_width="150dp"
+        android:layout_height="230dp"
         android:scaleType="centerCrop"
         android:contentDescription="movie poster"
         />
 
     <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="130dp"
+        android:id="@+id/Ct_txtTitle"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="트랜스포머: 어스스파크"

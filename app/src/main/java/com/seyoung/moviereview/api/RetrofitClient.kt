@@ -5,6 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+// Retrofit 객체 생성 담담 (KOBIS용, TMDB용 baseUrl 세팅하고 API 인터페이스를 만들어주는 역할)
 object RetrofitClient {
     private const val KOBIS_BASE_URL =
         "https://kobis.or.kr/kobisopenapi/webservice/rest/"

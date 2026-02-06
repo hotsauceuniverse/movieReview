@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.model
 
+// RecyclerView에 실제로 뿌릴 영화 아이템 모델 (순위 + 제목 + 포스터URL)
 data class MovieItem(
     val rank: String,
     val title: String,
