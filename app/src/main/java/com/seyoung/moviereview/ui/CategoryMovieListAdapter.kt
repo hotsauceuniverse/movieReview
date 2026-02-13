@@ -53,5 +53,4 @@ class CategoryMovieListAdapter(
     }
 
     override fun getItemCount(): Int = items.size
-
 }

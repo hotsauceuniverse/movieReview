@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +26,7 @@ import java.time.LocalDate
 
 class HomeFragment : Fragment() {
 
+    private lateinit var moreBtn: Button
     private lateinit var recyclerView: RecyclerView     // 일별 박스오피스 순위
     private lateinit var recyclerView_2: RecyclerView   // 카테고리 영화
     private lateinit var categoryRecyclerView: RecyclerView
@@ -41,6 +43,19 @@ class HomeFragment : Fragment() {
     val KOBIS_Key = BuildConfig.KOBIS_API_KEY
 
     private lateinit var progressBar: ProgressBar
+
+    private val fetchedItems = mutableListOf<MovieItem>()   // API로부터 받은 전체 목록(원본)
+    private val visibleItem = mutableListOf<MovieItem>()    // 화면에 보여줄 목록
+
+    private var currentCategoryType: String? = null         // 현재 선택된 TMDB 카테고리 타입(now_playing, popular 등). 더보기/추가 로딩할 때 어떤 카테고리를 불러올지 기준
+    private var currentPage = 1                             // TMDB 카테고리 API에서 현재까지 불러온 페이지 번호(기본 1). 다음 페이지 요청 시 currentPage+1
+    private var isLoading = false                           // 네트워크 요청 진행 중인지 여부(중복 호출 방지, 더보기 버튼 연타 방지)
+    private var isLastPage = false                          // 더 이상 불러올 데이터가 없는지 여부(응답이 비었거나 끝에 도달). true면 추가 fetch 안 함
+
+    private val FIRST_SHOW = 20                             // 최초 진입/카테고리 변경 직후 화면에 처음 보여줄 개수(일반적으로 page=1의 20개)
+    private val MORE_SHOW = 10                              // “더보기” 클릭 1번당 화면에 추가로 보여줄 개수(10개씩 증가)
+    private var visibleCount = 0                            // 현재 화면(recyclerView_2)에 실제로 노출 중인 아이템 개수
+
 
     // 영화 카테고리 목록
     val categories = listOf(
@@ -61,6 +76,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        moreBtn = view.findViewById(R.id.more_btn)
+
+        moreBtn.setOnClickListener{
+            showMoreOrFetch()
+        }
+
         progressBar = view.findViewById(R.id.progress_bar)
 
         // 일별 박스오피스 순위
@@ -75,7 +96,6 @@ class HomeFragment : Fragment() {
         categoryAdapter = CategoryAdapter(categories) { category -> onCategorySelected(category) }
 
         categoryRecyclerView.adapter = categoryAdapter
-        onCategorySelected(categories[0])
 
         // 전체 영화 순위
         recyclerView_2 = view.findViewById(R.id.recyclerView_2)
@@ -84,6 +104,7 @@ class HomeFragment : Fragment() {
         // 카테고리 영화 목록용 어댑터 연결
         categoryMovieListAdapter = CategoryMovieListAdapter()
         recyclerView_2.adapter = categoryMovieListAdapter
+        onCategorySelected(categories[0])
 
         loadBoxOffice()
     }
@@ -195,46 +216,109 @@ class HomeFragment : Fragment() {
         else progressBar.visibility = View.GONE
     }
 
-    // 카테고리 선택 시
+    // 카테고리 선택 시 : 초기화  +1 페이지 호출
     fun onCategorySelected(category: MovieCategory) {
-        loadTmdbCategory(category.apiType)
+        currentCategoryType = category.apiType
+
+        // 초기화
+        currentPage = 1
+        isLastPage = false
+        isLoading = false
+
+        fetchedItems.clear()
+        visibleItem.clear()
+        visibleCount = 0
+        categoryMovieListAdapter.submitList(emptyList())
+
+        fetchCategoryPage(page = 1)
     }
 
-    // TMDB 카테고리 로드
-    private fun loadTmdbCategory(type: String) {
-        RetrofitClient.getTmdb().getMoviesByCategory(type, TMDB_Key)
-            .enqueue(object : Callback<TmdbMovieListResponse> {
+    // 더보기 버튼 클릭 : 10개 더 보여주기 (부족하면 다음 page fetch)
+    private fun showMoreOrFetch() {
+        // 남은게 있으면 10개 더 노출
+        if (visibleCount < fetchedItems.size) {
+            val newCount = minOf(visibleCount + MORE_SHOW, fetchedItems.size)
+            applyVisibleCount(newCount)
+        }
 
+        // 다 보였는데 더 가져올 수 있으면 다음 page 요청
+        if (!isLoading && !isLastPage) {
+            fetchCategoryPage(page = currentPage + 1)
+        }
+    }
+
+    // page 호출 + 응답처리 (버퍼 누적 -> 처음엔 20개, 이후는 필요 시 노출)
+    // TMDB 카테고리 로드
+    private fun fetchCategoryPage(page: Int) {
+        val type = currentCategoryType ?: return
+        isLoading = true
+
+        RetrofitClient.getTmdb()
+            .getMoviesByCategory(type = type, apiKey = TMDB_Key, page = page)
+            .enqueue(object  : Callback<TmdbMovieListResponse> {
                 override fun onResponse(
                     call: Call<TmdbMovieListResponse>,
                     response: Response<TmdbMovieListResponse>
-                ) {
-                    val tmdbList = response.body()?.results ?: return
+                ){
+                    isLoading = false
 
-                    val movieItemList = mutableListOf<MovieItem>()
-                    var index = 0
-
-                    for (tmdbMovie in tmdbList) {
-                        val poseterUrl: String?
-                        if (tmdbMovie.poster_path != null) {
-                            poseterUrl = "https://image.tmdb.org/t/p/w500" + tmdbMovie.poster_path
-                        } else {
-                            poseterUrl = null
-                        }
-                        val moiveItem = MovieItem(
-                            rank = (index + 1).toString(),
-                            title = tmdbMovie.title,
-                            posterUrl = poseterUrl
-                        )
-                        movieItemList.add(moiveItem)
-                        index++
+                    val tmdbList = response.body()?.results.orEmpty()
+                    if (tmdbList.isEmpty()) {
+                        isLastPage = true
+                        updateMoreButton()
+                        return
                     }
-                    categoryMovieListAdapter.submitList(movieItemList)
+
+                    currentPage = page
+
+                    // TMDB -> MovieItem 변환해서 버퍼에 누적
+                    val startRank = fetchedItems.size + 1
+                    tmdbList.forEachIndexed { idx, tmdbMoive ->
+                        val posterURl = tmdbMoive.poster_path?.let { "https://image.tmdb.org/t/p/w500$it" }
+                        fetchedItems.add(
+                            MovieItem(
+                                rank = (startRank + idx).toString(),
+                                title = tmdbMoive.title,
+                                posterUrl = posterURl
+                            )
+                        )
+                    }
+
+                    // 최초 진입이면 20개 보여주기, 그 외엔 필요한 만큼만 늘리기
+                    if (visibleCount == 0) {
+                        applyVisibleCount(minOf(FIRST_SHOW, fetchedItems.size))
+                    } else {
+                        // 더보기 눌러서 fetch해온 경우 : 10개 늘려서 보여주기
+                        applyVisibleCount(minOf(visibleCount + MORE_SHOW, fetchedItems.size))
+                    }
                 }
 
                 override fun onFailure(call: Call<TmdbMovieListResponse>, t: Throwable) {
-                    Log.e("TMDB", "error", t)
+                    isLoading = false
+                    Log.e("TMDB", "category error   ", t)
+                    updateMoreButton()
                 }
             })
     }
+
+    // 화면 갱신 + 더보기 버튼 상태
+    private fun applyVisibleCount(newCount: Int) {
+        visibleCount = newCount
+
+        visibleItem.clear()
+        // take는 리스트의 앞부분 부터 지정한 개수만큼 요수를 추출하여 새로운 리스트를 생성하는 메서드
+        visibleItem.addAll(fetchedItems.take(visibleCount))
+
+        categoryMovieListAdapter.submitList(visibleItem.toList())
+        updateMoreButton()
+    }
+
+    private fun updateMoreButton() {
+        val hasMoreToShow = visibleCount < fetchedItems.size
+        val canFetchMore = !isLastPage && !isLoading
+
+        moreBtn.visibility = if (hasMoreToShow || canFetchMore) View.VISIBLE else View.GONE
+        moreBtn.isEnabled = !isLoading
+    }
+
 }
