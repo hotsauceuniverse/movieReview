@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,8 +36,20 @@ class CategoryMovieListAdapter(
                 .error(R.drawable.ic_launcher_background)
                 .into(imgPoster)
 
+            // 영화 TOP 차트 클릭 이벤트 처리
             itemView.setOnClickListener{
                 Log.d("CategoryMovieListAdapter_Click", "item=$item")
+                Log.d("CategoryMovieList_ID", "item.movieId=${item.movieId}")
+
+//                val context = itemView.context
+//                val intent = Intent(context, MovieTopChart::class.java)
+//                context.startActivity(intent)
+
+                val context = itemView.context
+                val intent = Intent(context, DailyMovieChart::class.java).apply {
+                    putExtra("movieId", item.movieId)
+                }
+                context.startActivity(intent)
             }
 
         }

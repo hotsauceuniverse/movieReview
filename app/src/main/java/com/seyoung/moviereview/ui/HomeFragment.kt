@@ -171,6 +171,7 @@ class HomeFragment : Fragment() {
                         ?.firstOrNull()
 
                     Log.d("TMDB_RAW", response.body().toString())
+                    Log.d("TMDB_MOVIE_ID", movie?.id.toString())
 
                     val posterUrl = movie?.poster_path?.let {
                         "https://image.tmdb.org/t/p/w500$it"
@@ -182,7 +183,8 @@ class HomeFragment : Fragment() {
                             MovieItem(
                                 rank = rank,
                                 title = movieTitle,
-                                posterUrl = posterUrl
+                                posterUrl = posterUrl,
+                                movieId = movie.id
                             )
                         )
                     }
@@ -279,7 +281,8 @@ class HomeFragment : Fragment() {
                             MovieItem(
                                 rank = (startRank + idx).toString(),
                                 title = tmdbMoive.title,
-                                posterUrl = posterURl
+                                posterUrl = posterURl,
+                                movieId = tmdbMoive.id
                             )
                         )
                     }

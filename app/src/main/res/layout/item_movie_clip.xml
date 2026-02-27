@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="8dp"
+    android:background="@color/white"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    >
+
+    <ImageView
+        android:id="@+id/movie_clip_item"
+        android:layout_width="250dp"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_launcher_background"
+        />
+
+    <TextView
+        android:id="@+id/movie_clip_title"
+        android:layout_width="250dp"
+        android:layout_height="25dp"
+        android:text="트랜스포머 : 어스스파크"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/movie_clip_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/white"
+        />
+
+    <ImageView
+        android:id="@+id/play_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="@+id/movie_clip_item"
+        app:layout_constraintEnd_toEndOf="@+id/movie_clip_item"
+        app:layout_constraintTop_toTopOf="@+id/movie_clip_item"
+        app:layout_constraintBottom_toBottomOf="@+id/movie_clip_item"
+        android:src="@drawable/play"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

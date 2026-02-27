@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -33,9 +34,18 @@ class BoxOfficeAdapter (
                 .error(R.drawable.ic_launcher_background)
                 .into(imgPoster)
 
-            // 클릭 이벤트 처리 테스트
+            // 일별 박스오피스 순위 클릭 이벤트 처리 테스트
             itemView.setOnClickListener {
                 Log.d("CLICKED", "item=$item")
+                Log.d("ID_CLICKED", "item.movieId=${item.movieId}")
+
+                // movieId 같이 전달
+                val context = itemView.context
+                val intent = Intent(context, DailyMovieChart::class.java).apply {
+                    putExtra("movieId", item.movieId)
+                }
+                context.startActivity(intent)
+
             }
         }
     }
