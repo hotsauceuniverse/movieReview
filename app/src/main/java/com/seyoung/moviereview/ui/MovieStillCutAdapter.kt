@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,19 @@ class MovieStillCutAdapter (
             Glide.with(itemView)
                 .load(url)
                 .into(movieStillCut)
+
+            val imageUrl = "https://image.tmdb.org/t/p/original${item.file_path}"
+
+            movieStillCut.setOnClickListener {
+                // 클릭 이벤트 처리
+                Log.d("Adapter_StillCut_Item", "click=${item.file_path}")
+
+                val context = itemView.context
+                val intent = Intent(context, MovieStillCutExpand::class.java).apply {
+                    putExtra("stillCutUrl", imageUrl)   // tmdb fil path가 아닌 전체 String url로 넘겨야함
+                }
+                context.startActivity(intent)
+            }
         }
     }
 

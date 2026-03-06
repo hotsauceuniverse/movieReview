@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId = "com.seyoung.moviereview"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -68,4 +68,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 }

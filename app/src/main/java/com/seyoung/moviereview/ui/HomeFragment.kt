@@ -218,9 +218,12 @@ class HomeFragment : Fragment() {
         else progressBar.visibility = View.GONE
     }
 
-    // 카테고리 선택 시 : 초기화  +1 페이지 호출
+    // 카테고리 선택 시 : 초기화 +1 페이지 호출
     fun onCategorySelected(category: MovieCategory) {
         currentCategoryType = category.apiType
+
+        // 카테고리 선택 시, 하이라이트 되게 하기
+
 
         // 초기화
         currentPage = 1

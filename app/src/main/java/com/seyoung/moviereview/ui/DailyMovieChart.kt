@@ -117,6 +117,7 @@ class DailyMovieChart : AppCompatActivity() {
                         .into(backdropImage)
 
                     // backdrop_path Image 블러처리
+                    // createBlurEffect : minSdk = 31로 설정
                     val blurEffect = RenderEffect.createBlurEffect(
                         35f, 35f, Shader.TileMode.CLAMP
                     )
