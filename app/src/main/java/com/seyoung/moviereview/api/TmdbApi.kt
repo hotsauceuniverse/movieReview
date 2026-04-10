@@ -3,6 +3,7 @@ package com.seyoung.moviereview.api
 import com.seyoung.moviereview.BuildConfig
 import com.seyoung.moviereview.model.MovieClipResponse
 import com.seyoung.moviereview.model.MovieDetailItem
+import com.seyoung.moviereview.model.MovieResponse
 import com.seyoung.moviereview.model.MovieStillCutResponse
 import com.seyoung.moviereview.model.TmdbMovieListResponse
 import com.seyoung.moviereview.model.TmdbSearchResponse
@@ -55,4 +56,14 @@ interface TmdbApi {
         @Query("api_key") apiKey: String = BuildConfig.TMDB_API_KEY,
         @Query("include_image_language") language: String = "xx,null"
     ): Call<MovieStillCutResponse>
+
+    // 영화 검색 -> 영화 + TV 같이 멀티 검색
+    @GET("search/multi")
+    // fun이 아닌 suspend fun을 쓰는 이유 : 네트워크 작업은 오래 걸리니까 UI 멈추지 않게 하려고
+    suspend fun getSearchMovie(
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String,
+        @Query("language") language: String = "ko-KR",
+        @Query("page") page: Int = 1
+    ): MovieResponse
 }

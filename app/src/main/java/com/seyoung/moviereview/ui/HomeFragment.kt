@@ -222,9 +222,6 @@ class HomeFragment : Fragment() {
     fun onCategorySelected(category: MovieCategory) {
         currentCategoryType = category.apiType
 
-        // 카테고리 선택 시, 하이라이트 되게 하기
-
-
         // 초기화
         currentPage = 1
         isLastPage = false

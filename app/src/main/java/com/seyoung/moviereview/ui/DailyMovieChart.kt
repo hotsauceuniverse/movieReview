@@ -63,7 +63,7 @@ class DailyMovieChart : AppCompatActivity() {
             finish()
         }
 
-        // intent에서 movie_id 받기
+        // BoxOfficeAdapter, SearchAdapter에서 intent에서 movie_id 받기
         val movieId = intent.getIntExtra("movieId", -1)
         Log.d("Movie_ID", movieId.toString())
 

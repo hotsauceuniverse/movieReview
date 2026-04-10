@@ -45,7 +45,6 @@ class BoxOfficeAdapter (
                     putExtra("movieId", item.movieId)
                 }
                 context.startActivity(intent)
-
             }
         }
     }

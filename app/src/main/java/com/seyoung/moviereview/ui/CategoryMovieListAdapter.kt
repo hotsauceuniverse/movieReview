@@ -51,7 +51,6 @@ class CategoryMovieListAdapter(
                 }
                 context.startActivity(intent)
             }
-
         }
     }
 
