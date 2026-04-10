@@ -61,6 +61,8 @@
 
     </LinearLayout>
 
+    <!-- fragment 하단이 bottomNavigation에 일부 잘릴때
+    height = 0 & constraintBottom_toBottomOf = parent 로 bottom 연결 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_result"
         android:layout_width="match_parent"
