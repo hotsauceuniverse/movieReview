@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.graphics.RenderEffect
 import android.graphics.Shader
 import android.os.Bundle
@@ -29,6 +30,7 @@ class DailyMovieChart : AppCompatActivity() {
     private lateinit var taglineText : TextView
     private lateinit var overviewText : TextView
     private lateinit var backBtn : ImageView
+    private lateinit var reviewBtn : TextView
 
     // 트레일러, 스틸컷 recyclerview
     private lateinit var movieClipRv : RecyclerView
@@ -62,6 +64,14 @@ class DailyMovieChart : AppCompatActivity() {
         backBtn.setOnClickListener {
             finish()
         }
+
+        // 리뷰 페이지 이동
+        reviewBtn = findViewById(R.id.review_btn)
+        reviewBtn.setOnClickListener {
+            val intent = Intent(this, ReviewActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // BoxOfficeAdapter, SearchAdapter에서 intent에서 movie_id 받기
         val movieId = intent.getIntExtra("movieId", -1)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.seyoung.moviereview.fileprovider -->
+    <!-- ReviewActivity 추가 -->
+    <!-- cacheDir 사용 -->
+    <cache-path
+        name="cache"
+        path="." />
+
+</paths>

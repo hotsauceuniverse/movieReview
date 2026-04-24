@@ -3,7 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <!-- 카메라 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"
+        />
+    <!-- Android 13 이상 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- Android 12 이하 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,7 +36,21 @@
 
         <activity android:name=".ui.DailyMovieChart"/>
         <activity android:name=".ui.MovieStillCutExpand"/>
+        <activity android:name=".ui.ReviewActivity"/>
 
+        <!-- java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.seyoung.moviereview.fileprovider -->
+        <!-- ReviewActivity 추가 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.seyoung.moviereview.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+        
     </application>
 
 </manifest>
