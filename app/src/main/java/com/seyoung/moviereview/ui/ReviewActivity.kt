@@ -15,12 +15,17 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import android.Manifest
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.seyoung.moviereview.model.ReviewData
+import com.seyoung.moviereview.model.ReviewRepository
 import java.io.File
 
 class ReviewActivity : AppCompatActivity() {
@@ -31,6 +36,7 @@ class ReviewActivity : AppCompatActivity() {
     private lateinit var infoBackBtn: ImageView
     private lateinit var ratingBar: RatingBar
     private lateinit var reviewTxt: TextView
+    private lateinit var saveBtn: Button
 
     private val REQUEST_CODE = 100
     private val REQUEST_CAMERA = 101
@@ -39,14 +45,60 @@ class ReviewActivity : AppCompatActivity() {
     private val imageList = ArrayList<Any>() // Bitmap 또는 Uri 저장
     private lateinit var photoUri: Uri
 
+    private var movieId: Int = -1
+    private var movieTitle: String = ""
+    private var posterUrl : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review_activity)
+
+        ratingBar = findViewById(R.id.ratingBar)
+        reviewTxt = findViewById(R.id.review_txt)
 
         // 뒤로가기 버튼
         infoBackBtn = findViewById(R.id.info_back_btn)
         infoBackBtn.setOnClickListener {
             finish()
+        }
+
+        // DailyMovieChart에서 넘어온 데이터 값 받기
+        // 영화 id
+        movieId = intent.getIntExtra("movieId", -1)
+
+        // 영화 제목
+        if (intent.getStringExtra("movieTitle") != null) {
+            movieTitle = intent.getStringExtra("movieTitle")!!
+        } else {
+            movieTitle = ""
+        }
+
+        // 영화 포스터
+        if (intent.getStringExtra("posterPath") != null) {
+            posterUrl = intent.getStringExtra("posterPath")!!
+        } else {
+            posterUrl = ""
+        }
+
+        // 저장 버튼 클릭 시, WriteFragment의 리스트로 노출 시키기
+        // 사용자가 작성한 리뷰를 하나의 객체로 만들어서 리스트에 저장
+        saveBtn = findViewById(R.id.save_btn)
+        saveBtn.setOnClickListener {
+            // 리뷰 객체 생성
+            val review = ReviewData(
+                // 입력값 가져오기
+                reviewText = reviewTxt.text.toString(),     // ex> 영화 재미있음
+                rating = ratingBar.rating,                  // 4.5
+                writeDate = writeDay.text.toString(),       // 2026-05-12
+                imageList = imageList,                      // [...]
+
+                movieId = movieId,
+                movieTitle = movieTitle,
+                posterUrl = posterUrl
+            )
+            // 리스트에 추가
+            ReviewRepository.reviewList.add(review)
+            customAlert()
         }
 
         // 작성 날짜를 오늘 날짜로 받아오기
@@ -190,5 +242,29 @@ class ReviewActivity : AppCompatActivity() {
             Log.d("카메라", "data: $data")
             Log.d("카메라", "extras: ${data?.extras}")
         }
+    }
+
+    // 리뷰 저장 버튼 클릭 시, 커스텀 다이얼로그 띄우기
+    fun customAlert() {
+        val dialogView = layoutInflater.inflate(R.layout.check_alert, null)
+        val text_1 = dialogView.findViewById<TextView>(R.id.txt_1)
+        val okBtn = dialogView.findViewById<Button>(R.id.ok_btn)
+
+        text_1.text = "저장이 완료 되었습니다."
+
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        alertDialog.window?.setBackgroundDrawable(
+            ColorDrawable(Color.TRANSPARENT)
+        )
+
+        okBtn.setOnClickListener {
+            alertDialog.dismiss()
+            finish()
+        }
+
+        alertDialog.show()
     }
 }

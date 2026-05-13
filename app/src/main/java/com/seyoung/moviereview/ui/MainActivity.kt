@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(WriteFragment())
                     true
                 }
+                R.id.item_4 -> {
+                    replaceFragment(LoginFragment())
+                    true
+                }
                 else -> false
             }
         }

@@ -39,6 +39,13 @@ class DailyMovieChart : AppCompatActivity() {
     private lateinit var movieClipAdapter: MovieClipListAdapter
     private lateinit var movieStillCutAdapter: MovieStillCutAdapter
 
+    // body.title을 변수 저장 후 데이터 넘기기
+    private var movieTitle : String = ""
+    private var movieId: Int = -1
+
+    // 영화 포스터 이미지 변수 저장
+    private var posterPath : String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.daily_movie_chart_activity)
@@ -69,12 +76,17 @@ class DailyMovieChart : AppCompatActivity() {
         reviewBtn = findViewById(R.id.review_btn)
         reviewBtn.setOnClickListener {
             val intent = Intent(this, ReviewActivity::class.java)
+
+            // movieId, movieTitle를 ReviewActivity 넘기기
+            intent.putExtra("movieId", movieId)
+            intent.putExtra("movieTitle", movieTitle)
+            intent.putExtra("posterPath", posterPath)
+
             startActivity(intent)
         }
 
-
         // BoxOfficeAdapter, SearchAdapter에서 intent에서 movie_id 받기
-        val movieId = intent.getIntExtra("movieId", -1)
+        movieId = intent.getIntExtra("movieId", -1)
         Log.d("Movie_ID", movieId.toString())
 
         if (movieId == -1) {
@@ -102,6 +114,8 @@ class DailyMovieChart : AppCompatActivity() {
 
                     // title, tagline, overview 세팅
                     titleText.text = body.title
+                    Log.d("titleText.text", titleText.text.toString())      // 여기서 영화 제목을 갖고 있음
+                    movieTitle = body.title
 
                     // tagline가 없으면 보이지 않게
                     if (body.tagline.isNullOrBlank()) {
@@ -120,6 +134,7 @@ class DailyMovieChart : AppCompatActivity() {
                     val posterUrl = body.poster_path?.let {
                         "https://image.tmdb.org/t/p/w500$it"
                     }
+                    posterPath = posterUrl ?: ""
 
                     // 이미지 로드
                     Glide.with(this@DailyMovieChart)
@@ -186,5 +201,4 @@ class DailyMovieChart : AppCompatActivity() {
                 }
             })
     }
-
 }

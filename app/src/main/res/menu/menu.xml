@@ -20,4 +20,10 @@
         tools:ignore="MenuTitle"
         />
 
+    <item
+        android:id="@+id/item_4"
+        android:icon="@drawable/user"
+        tools:ignore="MenuTitle"
+        />
+
 </menu>

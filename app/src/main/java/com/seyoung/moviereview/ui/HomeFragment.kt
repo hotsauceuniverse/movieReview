@@ -323,5 +323,4 @@ class HomeFragment : Fragment() {
         moreBtn.visibility = if (hasMoreToShow || canFetchMore) View.VISIBLE else View.GONE
         moreBtn.isEnabled = !isLoading
     }
-
 }

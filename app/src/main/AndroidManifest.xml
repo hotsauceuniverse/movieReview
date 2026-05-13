@@ -37,6 +37,7 @@
         <activity android:name=".ui.DailyMovieChart"/>
         <activity android:name=".ui.MovieStillCutExpand"/>
         <activity android:name=".ui.ReviewActivity"/>
+        <activity android:name=".ui.JoinMembershipActivity"/>
 
         <!-- java.lang.IllegalArgumentException: Couldn't find meta-data for provider with authority com.seyoung.moviereview.fileprovider -->
         <!-- ReviewActivity 추가 -->
