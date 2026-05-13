@@ -206,9 +206,20 @@ class ReviewActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_CAMERA)
     }
 
+//    private fun openGallery() {
+//        // 갤러리에서 업로드한 사진이 intent로 값을 보낼 때 리스트에 노출이 안됨
+//        val intent = Intent(Intent.ACTION_PICK)
+//        intent.type = "image/*"
+//        startActivityForResult(intent, REQUEST_GALLERY)
+//    }
+
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+            // 권한 유지
+            flags = Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+        }
         startActivityForResult(intent, REQUEST_GALLERY)
     }
 
@@ -231,9 +242,17 @@ class ReviewActivity : AppCompatActivity() {
                     }
                 }
 
+//                REQUEST_GALLERY -> {
+//                    val uri = data?.data
+//                    if (uri != null) {
+//                        imageList.add(uri.toString())
+//                    }
+//                }
+
                 REQUEST_GALLERY -> {
                     val uri = data?.data
                     if (uri != null) {
+                        contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         imageList.add(uri.toString())
                     }
                 }
