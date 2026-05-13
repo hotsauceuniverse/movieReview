@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.seyoung.moviereview.R
 
 class ImageAdapter(
-    private val imageList: ArrayList<Any>,
+    private val imageList: ArrayList<String>,
     private val listener: OnAddClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {       // ViewHolder 1개 Adapter<MyViewHolder>, ViewHolder 여러 개 Adapter<RecyclerView.ViewHolder>
 
@@ -66,10 +67,14 @@ class ImageAdapter(
         } else if (holder is ImageViewHolder) {
             val item = imageList[position]
 
-            when (item) {
-                is Bitmap -> holder.imageView.setImageBitmap(item)
-                is Uri -> holder.imageView.setImageURI(item)
-            }
+//            when (item) {
+//                is Bitmap -> holder.imageView.setImageBitmap(item)
+//                is Uri -> holder.imageView.setImageURI(item)
+//            }
+
+            Glide.with(holder.itemView.context)
+                .load(item)
+                .into(holder.imageView)
 
             holder.deleteBtn.setOnClickListener {
                 val position = holder.bindingAdapterPosition

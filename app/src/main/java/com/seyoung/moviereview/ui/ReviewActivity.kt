@@ -42,8 +42,8 @@ class ReviewActivity : AppCompatActivity() {
     private val REQUEST_CAMERA = 101
     private val REQUEST_GALLERY = 102
 
-    private val imageList = ArrayList<Any>() // Bitmap 또는 Uri 저장
-    private lateinit var photoUri: Uri
+    private val imageList = ArrayList<String>() // Bitmap 또는 Uri 저장
+    private var photoUri: Uri? = null
 
     private var movieId: Int = -1
     private var movieTitle: String = ""
@@ -226,13 +226,15 @@ class ReviewActivity : AppCompatActivity() {
 //                }
 
                 REQUEST_CAMERA -> {
-                    imageList.add(photoUri)
+                    photoUri?.let {
+                        imageList.add(it.toString())
+                    }
                 }
 
                 REQUEST_GALLERY -> {
                     val uri = data?.data
                     if (uri != null) {
-                        imageList.add(uri)
+                        imageList.add(uri.toString())
                     }
                 }
             }

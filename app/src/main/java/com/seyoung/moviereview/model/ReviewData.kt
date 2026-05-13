@@ -4,7 +4,7 @@ data class ReviewData (
     val reviewText: String,
     val rating: Float,
     val writeDate: String,
-    val imageList: ArrayList<Any>,      // 사용자가 업로드한 이미지
+    val imageList: ArrayList<String>,      // 사용자가 업로드한 이미지
 
     val movieId: Int,
     val movieTitle: String,

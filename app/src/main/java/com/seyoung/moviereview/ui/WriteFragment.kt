@@ -34,7 +34,6 @@ class WriteFragment : Fragment() {
 
         adapter = MovieReviewAdapter(ReviewRepository.reviewList)
         movieReviewRv.adapter = adapter
-    
     }
 }
 

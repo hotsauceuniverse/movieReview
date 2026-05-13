@@ -1,5 +1,6 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +39,37 @@ class MovieReviewAdapter (
                 .load(item.posterUrl)
                 .into(reviewImg)
 
-            Log.d("리스트 아이템", item.toString())
+            // 리스트 아이템 클릭
+            itemView.setOnClickListener {
+                // EX> ReviewData(reviewText=ff, rating=4.5, writeDate=2026 - 05 - 13, imageList=[], movieId=1007757, movieTitle=뒤바뀐 친구들의 신비한 모험, posterUrl=https://image.tmdb.org/t/p/w500/uv0iRQXDbtWHo1zPk3TZNo4Biti.jpg)
+                Log.d("itemViewList", item.toString())
+
+                // ReviewPreviewActivity 화면으로 이동
+                val intent = Intent(itemView.context, ReviewPreviewActivity::class.java)
+
+                intent.putExtra("movieTitle", item.movieTitle)      // 영화 제목
+                Log.d("movieTitle", item.movieTitle)
+
+                intent.putExtra("rating", item.rating.toString())   // 별점
+                Log.d("rating", item.rating.toString())
+
+                intent.putExtra("writeDate", item.writeDate)        // 작성 날짜
+                Log.d("writeDate", item.writeDate)
+
+                intent.putExtra("reviewText", item.reviewText)       // 작성 리뷰
+                Log.d("reviewText", item.reviewText)
+
+                intent.putExtra("posterUrl", item.posterUrl)        // 영화 포스터
+                Log.d("posterUrl", item.posterUrl)
+
+                intent.putExtra("movieId", item.movieId.toString()) // 영화 ID
+                Log.d("movieId", item.movieId.toString())
+
+                intent.putStringArrayListExtra("imageList", item.imageList)
+                Log.d("imageList", item.imageList.toString())
+
+                itemView.context.startActivity(intent)
+            }
         }
     }
 

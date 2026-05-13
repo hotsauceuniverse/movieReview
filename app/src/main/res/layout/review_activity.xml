@@ -177,10 +177,11 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="16dp"
+                android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_4" />
+                app:layout_constraintTop_toBottomOf="@id/txt_4"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
