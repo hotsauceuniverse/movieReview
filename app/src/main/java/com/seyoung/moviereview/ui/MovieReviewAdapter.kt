@@ -37,6 +37,8 @@ class MovieReviewAdapter (
             Glide.with(itemView.context)
                 .load(item.posterUrl)
                 .into(reviewImg)
+
+            Log.d("리스트 아이템", item.toString())
         }
     }
 

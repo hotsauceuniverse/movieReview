@@ -39,8 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:text="리뷰작성"
-            android:textColor="@color/black"
+            android:textColor="#03A9F4"
             android:textSize="16dp"
+            android:textStyle="bold"
             android:layout_gravity="end"
             android:layout_marginRight="16dp"
             />
