@@ -1,7 +1,7 @@
 package com.seyoung.moviereview.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -38,13 +38,11 @@ class ReviewPreviewActivity : AppCompatActivity() {
         ratingBar = findViewById(R.id.ratingBar)
 
         reviewDataGet()
-
-        // 수정하기 버튼 구현 필요
-        editBtn = findViewById(R.id.edit_btn)
     }
 
+    // 작성한 리뷰를 보여주는 화면
     fun reviewDataGet() {
-        // Intent로 넘어온 데이터 받기
+        // MovieReviewAdapter에서 Intent로 넘어온 데이터 받기
         val movieTitle = intent.getStringExtra("movieTitle") ?: ""
         reviewTitle.text = movieTitle
 
@@ -60,9 +58,21 @@ class ReviewPreviewActivity : AppCompatActivity() {
         ratingBar.rating = rating.toFloat()
 
         val imageList = intent.getStringArrayListExtra("imageList") ?: arrayListOf()
+
         photoReviewRv = findViewById(R.id.photo_review_rv)
         photoReviewRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         imagePreviewAdapter = ImagePreviewAdapter(imageList)
         photoReviewRv.adapter = imagePreviewAdapter
+    }
+
+    // 작성된 리뷰를 ReviewActivity로 데이터를 같이 넘겨서 수정
+    fun editReview() {
+        // 수정하기 버튼 구현 필요
+        editBtn = findViewById(R.id.edit_btn)
+        val intent = Intent(this, ReviewActivity::class.java)
+
+        editBtn.setOnClickListener {
+            startActivity(intent)
+        }
     }
 }

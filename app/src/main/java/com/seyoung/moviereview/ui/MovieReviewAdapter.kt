@@ -47,25 +47,25 @@ class MovieReviewAdapter (
                 // ReviewPreviewActivity 화면으로 이동
                 val intent = Intent(itemView.context, ReviewPreviewActivity::class.java)
 
-                intent.putExtra("movieTitle", item.movieTitle)      // 영화 제목
+                intent.putExtra("movieTitle", item.movieTitle)                  // 영화 제목
                 Log.d("movieTitle", item.movieTitle)
 
-                intent.putExtra("rating", item.rating.toString())   // 별점
+                intent.putExtra("rating", item.rating.toString())               // 별점
                 Log.d("rating", item.rating.toString())
 
-                intent.putExtra("writeDate", item.writeDate)        // 작성 날짜
+                intent.putExtra("writeDate", item.writeDate)                    // 작성 날짜
                 Log.d("writeDate", item.writeDate)
 
-                intent.putExtra("reviewText", item.reviewText)       // 작성 리뷰
+                intent.putExtra("reviewText", item.reviewText)                  // 작성 리뷰
                 Log.d("reviewText", item.reviewText)
 
-                intent.putExtra("posterUrl", item.posterUrl)        // 영화 포스터
+                intent.putExtra("posterUrl", item.posterUrl)                    // 영화 포스터
                 Log.d("posterUrl", item.posterUrl)
 
-                intent.putExtra("movieId", item.movieId.toString()) // 영화 ID
+                intent.putExtra("movieId", item.movieId.toString())             // 영화 ID
                 Log.d("movieId", item.movieId.toString())
 
-                intent.putStringArrayListExtra("imageList", item.imageList)
+                intent.putStringArrayListExtra("imageList", item.imageList)     // 사용자가 업로드한 사진
                 Log.d("imageList", item.imageList.toString())
 
                 itemView.context.startActivity(intent)
