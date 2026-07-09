@@ -47,6 +47,9 @@ class MovieReviewAdapter (
                 // ReviewPreviewActivity 화면으로 이동
                 val intent = Intent(itemView.context, ReviewPreviewActivity::class.java)
 
+                intent.putExtra("reviewPosition", bindingAdapterPosition)       // position 값
+                Log.d("reviewPosition", bindingAdapterPosition.toString())
+
                 intent.putExtra("movieTitle", item.movieTitle)                  // 영화 제목
                 Log.d("movieTitle", item.movieTitle)
 
@@ -62,7 +65,7 @@ class MovieReviewAdapter (
                 intent.putExtra("posterUrl", item.posterUrl)                    // 영화 포스터
                 Log.d("posterUrl", item.posterUrl)
 
-                intent.putExtra("movieId", item.movieId.toString())             // 영화 ID
+                intent.putExtra("movieId", item.movieId)                        // 영화 ID
                 Log.d("movieId", item.movieId.toString())
 
                 intent.putStringArrayListExtra("imageList", item.imageList)     // 사용자가 업로드한 사진
@@ -70,6 +73,8 @@ class MovieReviewAdapter (
 
                 itemView.context.startActivity(intent)
             }
+
+            Log.d("POSTER_BIND", item.posterUrl)
         }
     }
 

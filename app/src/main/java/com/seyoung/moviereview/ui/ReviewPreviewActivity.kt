@@ -2,6 +2,7 @@ package com.seyoung.moviereview.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -23,6 +24,15 @@ class ReviewPreviewActivity : AppCompatActivity() {
     private lateinit var photoReviewRv : RecyclerView
     private lateinit var imagePreviewAdapter: ImagePreviewAdapter
 
+    // 변수 저장 후 데이터 넘기기
+    private var movieTitle : String = ""
+    private var reviewText : String = ""
+    private var movieId: Int = -1
+    private var posterUrl : String = ""
+    private var imageList : ArrayList<String> = arrayListOf()
+    private var rating : Float = 0f
+    private var position : Int = -1     // 신규 작성인지 수정인지 구분할 값
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review_preview)
@@ -38,26 +48,38 @@ class ReviewPreviewActivity : AppCompatActivity() {
         ratingBar = findViewById(R.id.ratingBar)
 
         reviewDataGet()
+        editReview()
     }
 
     // 작성한 리뷰를 보여주는 화면
     fun reviewDataGet() {
         // MovieReviewAdapter에서 Intent로 넘어온 데이터 받기
-        val movieTitle = intent.getStringExtra("movieTitle") ?: ""
+        // 상단 멤버 변수가 있는데 지역번수(val)을 새로 만들고 있어서 넘길때 빈 값으로 넘어감
+        movieTitle = intent.getStringExtra("movieTitle") ?: ""
         reviewTitle.text = movieTitle
+        Log.d("CHECK_1", "받은 movieTitle = $movieTitle")
 
-        val reviewText = intent.getStringExtra("reviewText") ?: ""
+        reviewText = intent.getStringExtra("reviewText") ?: ""
         reviewOverview.text = reviewText
+        Log.d("CHECK_1", "받은 reviewText = $reviewText")
 
-        val posterUrl = intent.getStringExtra("posterUrl") ?: ""
+        posterUrl = intent.getStringExtra("posterUrl") ?: ""
         Glide.with(this)
             .load(posterUrl)
             .into(posterPath)
 
-        val rating = intent.getStringExtra("rating") ?: ""
-        ratingBar.rating = rating.toFloat()
+        movieId = intent.getIntExtra("movieId", -1)
+        position = intent.getIntExtra("reviewPosition", -1)
 
-        val imageList = intent.getStringArrayListExtra("imageList") ?: arrayListOf()
+//        val rating = intent.getStringExtra("rating") ?: "0"
+//        ratingBar.rating = rating.toFloat()
+
+//        val imageList = intent.getStringArrayListExtra("imageList") ?: arrayListOf()
+
+        rating = intent.getStringExtra("rating")?.toFloatOrNull() ?: 0f
+        ratingBar.rating = rating
+
+        imageList = intent.getStringArrayListExtra("imageList") ?: arrayListOf()
 
         photoReviewRv = findViewById(R.id.photo_review_rv)
         photoReviewRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -69,10 +91,35 @@ class ReviewPreviewActivity : AppCompatActivity() {
     fun editReview() {
         // 수정하기 버튼 구현 필요
         editBtn = findViewById(R.id.edit_btn)
-        val intent = Intent(this, ReviewActivity::class.java)
-
         editBtn.setOnClickListener {
+
+            Log.d("CHECK_2", "수정버튼 movieTitle=$movieTitle")
+            Log.d("CHECK_2", "수정버튼 reviewText=$reviewText")
+
+            val intent = Intent(this, ReviewActivity::class.java)
+
+            intent.putExtra("reviewPosition", position)
+
+            intent.putExtra("movieId", movieId)
+            Log.d("review_movieId", movieId.toString())     // movieId : 1339713
+
+            intent.putExtra("movieTitle", movieTitle)
+            Log.d("review_movieTitle", movieTitle)          // 눈동자
+
+            intent.putExtra("reviewText", reviewText)
+            Log.d("review_reviewText", reviewText)          // 11111111
+
+            intent.putExtra("posterPath", posterUrl)
+            Log.d("review_posterUrl", posterUrl)
+
+            intent.putStringArrayListExtra("imageList", imageList)
+            Log.d("review_imageList", imageList.toString())
+
+            intent.putExtra("rating", rating)
+            Log.d("review_rating", ratingBar.rating.toString())
+
             startActivity(intent)
+            finish()
         }
     }
 }

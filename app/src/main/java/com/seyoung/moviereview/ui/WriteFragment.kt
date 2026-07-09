@@ -15,6 +15,11 @@ class WriteFragment : Fragment() {
     private lateinit var movieReviewRv : RecyclerView
     private lateinit var adapter: MovieReviewAdapter
 
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,8 +35,9 @@ class WriteFragment : Fragment() {
         // 작성한 리뷰 클릭 시, 해당 리뷰 레이아웃 이동
         movieReviewRv = view.findViewById(R.id.movie_review_rv)
         movieReviewRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        movieReviewRv.adapter = MovieReviewAdapter(ReviewRepository.reviewList) // 리스트를 넘기는 이유 : 어떤 데이터를 출력할지 알아야 하기 때문
 
+        // 리스트를 넘기는 이유 : 어떤 데이터를 출력할지 알아야 하기 때문
+//        movieReviewRv.adapter = MovieReviewAdapter(ReviewRepository.reviewList)
         adapter = MovieReviewAdapter(ReviewRepository.reviewList)
         movieReviewRv.adapter = adapter
     }

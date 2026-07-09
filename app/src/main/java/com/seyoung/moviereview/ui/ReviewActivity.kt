@@ -49,6 +49,8 @@ class ReviewActivity : AppCompatActivity() {
     private var movieTitle: String = ""
     private var posterUrl : String = ""
 
+    private var position = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.review_activity)
@@ -76,9 +78,13 @@ class ReviewActivity : AppCompatActivity() {
         // 영화 포스터
         if (intent.getStringExtra("posterPath") != null) {
             posterUrl = intent.getStringExtra("posterPath")!!
+            Log.d("POSTER", posterUrl)
         } else {
             posterUrl = ""
         }
+
+        // 리스트 position 값
+        position = intent.getIntExtra("reviewPosition",-1)
 
         // 저장 버튼 클릭 시, WriteFragment의 리스트로 노출 시키기
         // 사용자가 작성한 리뷰를 하나의 객체로 만들어서 리스트에 저장
@@ -96,8 +102,18 @@ class ReviewActivity : AppCompatActivity() {
                 movieTitle = movieTitle,
                 posterUrl = posterUrl
             )
+
             // 리스트에 추가
-            ReviewRepository.reviewList.add(review)
+            if(position == -1){
+                Log.d("POSITION", "새 리뷰 추가")
+                ReviewRepository.reviewList.add(review)
+            }else{
+                Log.d("POSITION", "기존 리뷰 수정 : $position")
+                ReviewRepository.reviewList[position] = review
+            }
+
+            Log.d("POSTER", posterUrl)
+
             customAlert()
         }
 
@@ -132,6 +148,10 @@ class ReviewActivity : AppCompatActivity() {
             }
         })
         photoUploadRv.adapter = adapter
+
+        setEditData()
+
+//        Log.d("EDIT", intent.getStringExtra("reviewText") ?: "null")
     }
 
     private fun checkPermission(): Boolean {
@@ -287,5 +307,27 @@ class ReviewActivity : AppCompatActivity() {
         }
 
         alertDialog.show()
+    }
+
+    // ReviewPreviewActivity 에서 넘어온 데이터 값 받기
+    private fun setEditData() {
+
+        val reviewText = intent.getStringExtra("reviewText")
+
+        if (reviewText != null) {
+            reviewTxt.text = reviewText
+
+            ratingBar.rating =
+                intent.getFloatExtra("rating", 0f)
+
+            val images =
+                intent.getStringArrayListExtra("imageList")
+                    ?: arrayListOf()
+
+            imageList.clear()
+            imageList.addAll(images)
+
+            adapter.notifyDataSetChanged()
+        }
     }
 }
